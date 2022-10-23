@@ -264,6 +264,9 @@ jobs:
         with:
           java-version: 11
           distribution: temurin
+      
+      # Get tags for versioning
+      - run: git fetch --tags --force
 
       # Clear any existing web resources.
       - run: |
