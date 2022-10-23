@@ -176,11 +176,11 @@ jobs:
       - run: |
           chmod +x gradlew
           ./gradlew photon-lib:build --max-workers 1
-      - run: ./gradlew photon-lib:publish photon-targeting:publish
-        name: Publish
+      - name: Publish
+        run: ./gradlew photon-lib:publish photon-targeting:publish
         env:
           ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.repository == 'PhotonVision/photonvision'
 
   photonlib-build-docker:
     strategy:
@@ -208,12 +208,11 @@ jobs:
       - run: |
           chmod +x gradlew
           ./gradlew photon-lib:build --max-workers 1
-      - run: |
-          chmod +x gradlew
-          ./gradlew photon-lib:publish
+      - name: Publish
+        run: ./gradlew photon-lib:publish
         env:
           ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.repository == 'PhotonVision/photonvision'
 
   photonlib-wpiformat:
     name: "wpiformat"
@@ -264,6 +263,9 @@ jobs:
         with:
           java-version: 11
           distribution: temurin
+
+      # Get tags for versioning
+      - run: git fetch --tags --force
 
       # Clear any existing web resources.
       - run: |
